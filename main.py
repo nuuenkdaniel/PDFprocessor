@@ -1,3 +1,3 @@
-from PDFMethods import mergePDF
+from PDFMethods import splitPDF
 
-mergePDF('Revised resume.pdf','pdf2.pdf')
+splitPDF("merged.pdf")
