@@ -1,3 +1,3 @@
-from PDFMethods import splitPDF
+from PDFMethods import createPDF
 
-splitPDF("merged.pdf")
+createPDF("231020_23-12-27.png")
