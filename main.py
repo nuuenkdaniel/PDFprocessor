@@ -1,3 +1,3 @@
-from PDFMethods import createPDF
+from PDFMethods import convertPDF
 
-createPDF("231020_23-12-27.png")
+convertPDF("231020_23-12-27.jpg")

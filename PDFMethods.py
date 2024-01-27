@@ -1,33 +1,37 @@
-def mergePDF(files,newFileName):
-    from PyPDF2 import PdfWriter
+from PyPDF2 import PdfWriter
+from PyPDF2 import PdfReader
+from PIL import Image
+import os
+
+def convertPDF(file):
+    file_name, file_ext = os.path.splitext(file)
+    if file_ext == ".png" or file_ext == ".jpg":
+        with Image.open(file) as image:
+           image_rgb = image.convert('RGB')
+           image_rgb.save(f"{file_name}.pdf", "PDF")
+        return f"{file_name}.pdf"    
+
+def mergePDF(files,new_file_name):
     merger = PdfWriter()
     for file in files:
+        file_ext = os.path.splitext(file)[1]
+        if file_ext != ".pdf":
+            file = convertPDF(file)
         merger.append(file)
-    if newFileName == None:
+    if new_file_name == None:
         merger.write("merged.pdf")
     else:
-        merger.write(f"{newFileName}.pdf")
+        merger.write(f"{new_file_name}.pdf")
     merger.close()
 
+
 def splitPDF(file):
-    from PyPDF2 import PdfReader
-    from PyPDF2 import PdfWriter
-    import os
     with open(file,"rb") as originalPDF:
         reader = PdfReader(originalPDF)
         pages = len(reader.pages)
-        title = os.path.basename("merged.pdf")
+        title = os.path.basename(file)
         for i in range(pages):
             writer = PdfWriter()
             writer.append(fileobj=originalPDF,pages=(i,i+1))
             writer.write(f"{title[0:-4]}_{i+1}.pdf")
             writer.close()
-            
-def createPDF(file):
-    from PyPDF2 import PdfWriter
-    from pillow import Image
-    with Image.open(file) as image:
-        pdf_writer = PdfWriter()
-        pdf_writer.addPage(image.convert('RGB'))
-        with open(pdf_path, 'wb') as pdf_file:
-            pdf_writer.write(pdf_file)
