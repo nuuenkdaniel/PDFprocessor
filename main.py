@@ -1,6 +1,6 @@
-from PDFMethods import convertPDF
-from PDFMethods import splitPDF
-from PDFMethods import mergePDF
+from website import create_app
 
-splitPDF("merged.pdf")
-mergePDF(["merged_1.pdf","merged_2.pdf"],"merged2.pdf")
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(debug=True)
