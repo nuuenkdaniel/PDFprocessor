@@ -9,8 +9,7 @@ def convertPDF(file):
     if file_ext == ".png" or file_ext == ".jpg":
         with Image.open(file) as image:
            image_rgb = image.convert('RGB')
-           image_rgb.save(f"{file_name}.pdf", "PDF")
-        return f"{file_name}.pdf"    
+           image_rgb.save(f"{file_name}.pdf", "PDF")        
     elif file_ext == ".txt":
         with open(file,"r") as txt_file:
             pdf = FPDF()
@@ -19,6 +18,7 @@ def convertPDF(file):
             for line in txt_file:
                 pdf.cell(200,10,txt=line,ln=1,align="L")
             pdf.output(f"{file_name}.pdf")
+    return f"{file_name}.pdf"
 
 def mergePDF(files,new_file_name):
     merger = PdfWriter()
@@ -30,17 +30,16 @@ def mergePDF(files,new_file_name):
     if new_file_name == None:
         merger.write("merged.pdf")
     else:
-        merger.write(f"{new_file_name}.pdf")
+        merger.write(new_file_name)
     merger.close()
-
 
 def splitPDF(file):
     with open(file,"rb") as originalPDF:
         reader = PdfReader(originalPDF)
         pages = len(reader.pages)
-        title = os.path.basename(file)
+        title = os.path.splitext(file)[0]
         for i in range(pages):
             writer = PdfWriter()
             writer.append(fileobj=originalPDF,pages=(i,i+1))
-            writer.write(f"{title[0:-4]}_{i+1}.pdf")
+            writer.write(f"{title}_{i+1}.pdf")
             writer.close()
