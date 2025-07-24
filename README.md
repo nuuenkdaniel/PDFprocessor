@@ -4,7 +4,11 @@
 git clone https://github.com/nuuenkdaniel/PDFprocessor
 cd PDFprocessor
 mv pdf.py ~/.local/bin/
-python -m venv ~/.local/share/pdf-venv
+python -m venv pdf-venv
+pdf-venv/bin/pip install -r requirements.txt
+mv pdf-venv ~/.local/share
+cd ..
+rm -rf PDFprocessor
 ```
 
 ### Config ###
