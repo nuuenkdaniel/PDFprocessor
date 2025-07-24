@@ -103,5 +103,4 @@ def main():
         parser.error("No action specified")
 
 if __name__ == "__main__":
-    print("Testing")
     main()
