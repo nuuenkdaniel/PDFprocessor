@@ -1,4 +1,4 @@
-#!/home/{changeme}/.local/share/.pdf-venv/bin/python
+#!/home/{changeme}/.local/share/pdf-venv/bin/python
 
 from PyPDF2 import PdfWriter
 from PyPDF2 import PdfReader

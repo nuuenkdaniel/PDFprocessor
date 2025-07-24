@@ -3,7 +3,8 @@
 ```
 git clone https://github.com/nuuenkdaniel/PDFprocessor
 cd PDFprocessor
-mv pdf.py ~/.local/bin/
+mv pdf.py ~/.local/bin/pdf
+chmod +x ~/.local/bin/pdf
 python -m venv pdf-venv
 pdf-venv/bin/pip install -r requirements.txt
 mv pdf-venv ~/.local/share
