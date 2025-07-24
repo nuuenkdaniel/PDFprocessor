@@ -2,16 +2,19 @@ from PyPDF2 import PdfWriter
 from PyPDF2 import PdfReader
 from fpdf import FPDF
 from PIL import Image
+from pathlib import Path
 import sys
 import os
 import argparse
 
-def convertPDF(file):
+def convert2PDF(file):
+    stem = Path(file).stem
     file_name, file_ext = os.path.splitext(file)
+    out_path = Path.cwd() / f"{stem}.pdf"
     if file_ext == ".png" or file_ext == ".jpg":
         with Image.open(file) as image:
-           image_rgb = image.convert('RGB')
-           image_rgb.save(f"{file_name}.pdf", "PDF")        
+            image_rgb = image.convert('RGB')
+            image_rgb.save(out_path, "PDF")        
     elif file_ext == ".txt":
         with open(file,"r") as txt_file:
             pdf = FPDF()
@@ -19,8 +22,10 @@ def convertPDF(file):
             pdf.set_font("Arial",size=16)
             for line in txt_file:
                 pdf.cell(200,10,txt=line,ln=1,align="L")
-            pdf.output(f"{file_name}.pdf")
-    return f"{file_name}.pdf"
+            pdf.output(out_path)
+    else:
+        raise ValueError(f"Unsupported extension: {file_ext}")
+    print(f"Saved to {out_path}") 
 
 def mergePDF(files,new_file_name):
     merger = PdfWriter()
@@ -74,16 +79,17 @@ def main():
     args = parser.parse_args()
 
     if args.convert:
-        infile = args.convert[0]
-        print(f"Converting {infile} to pdf...")
+        file = args.convert[0]
+        print(f"Converting {file} to pdf...")
+        convert2PDF(file)
     elif args.merge:
         files = args.merge
         if len(files) < 2:
             parser.error("--merge requires at least two files")
         print(f"Merging {len(files)} files: {', '.join(files)}")
     elif args.split:
-        infile = args.split[0]
-        print(f"Splitting {infile}...")
+        file = args.split[0]
+        print(f"Splitting {file}...")
     else:
         parser.error("No action specified")
 
