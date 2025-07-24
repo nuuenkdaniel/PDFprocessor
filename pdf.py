@@ -1,3 +1,5 @@
+#!/home/{changeme}/.local/share/.pdf-venv/bin/python
+
 from PyPDF2 import PdfWriter
 from PyPDF2 import PdfReader
 from fpdf import FPDF
@@ -7,10 +9,8 @@ import sys
 import os
 import argparse
 
-def convert2PDF(file):
-    stem = Path(file).stem
+def convert2PDF(file, out_path):
     file_name, file_ext = os.path.splitext(file)
-    out_path = Path.cwd() / f"{stem}.pdf"
     if file_ext == ".png" or file_ext == ".jpg":
         with Image.open(file) as image:
             image_rgb = image.convert('RGB')
@@ -25,22 +25,22 @@ def convert2PDF(file):
             pdf.output(out_path)
     else:
         raise ValueError(f"Unsupported extension: {file_ext}")
-    print(f"Saved to {out_path}") 
 
-def mergePDF(files,new_file_name):
+def mergePDF(files, out_path):
     merger = PdfWriter()
     for file in files:
         file_ext = os.path.splitext(file)[1]
         if file_ext != ".pdf":
-            file = convertPDF(file)
-        merger.append(file)
-    if new_file_name == None:
-        merger.write("merged.pdf")
-    else:
-        merger.write(new_file_name)
+            temp_out = Path.cwd() / "temporary_conversion_pdf.pdf"
+            convert2PDF(file, temp_out)
+            merger.append(temp_out)
+            os.remove(temp_out)
+        else:
+            merger.append(file)
+    merger.write(out_path)
     merger.close()
 
-def splitPDF(file):
+def splitPDF(file, out_path):
     with open(file,"rb") as originalPDF:
         reader = PdfReader(originalPDF)
         pages = len(reader.pages)
@@ -48,7 +48,7 @@ def splitPDF(file):
         for i in range(pages):
             writer = PdfWriter()
             writer.append(fileobj=originalPDF,pages=(i,i+1))
-            writer.write(f"{title}_{i+1}.pdf")
+            writer.write(f"{out_path}/{title}_{i+1}.pdf")
             writer.close()
 
 def main():
@@ -67,7 +67,7 @@ def main():
         "-m", "--merge",
         nargs="+",
         metavar="FILE",
-        help="Merge two or more FILEs"
+        help="Merge two or more FILES"
     )
     group.add_argument(
         "-s", "--split",
@@ -81,15 +81,24 @@ def main():
     if args.convert:
         file = args.convert[0]
         print(f"Converting {file} to pdf...")
-        convert2PDF(file)
+        stem = Path(file).stem
+        out_path = Path.cwd() / f"{stem}.pdf"
+        convert2PDF(file, out_path)
+        print(f"Saved to {out_path}")
     elif args.merge:
         files = args.merge
-        if len(files) < 2:
-            parser.error("--merge requires at least two files")
-        print(f"Merging {len(files)} files: {', '.join(files)}")
+        if len(files) < 3:
+            parser.error("--merge requires at least two files and a new file name")
+        print(f"Merging {len(files)-1} files: {', '.join(files[:-1])}")
+        out_path = Path.cwd() / f"{files[-1]}.pdf"
+        mergePDF(files[:-1], out_path)
+        print(f"Saved to {out_path}")
     elif args.split:
         file = args.split[0]
         print(f"Splitting {file}...")
+        out_path = Path.cwd()
+        splitPDF(file, out_path)
+        print(f"Saved to directory {out_path}/")
     else:
         parser.error("No action specified")
 
