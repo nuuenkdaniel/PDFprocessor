@@ -7,21 +7,21 @@ cd PDFprocessor
 ```
 
 ## Usage ##
-<u>#### Convert a file ####</u>
+### Convert a file ###
 ```
 # Convert can accept files of the pdf, txt, jpg, png formats
 pdf.py -c input.txt
 ```
 Will give you input.pdf
 
-<u>#### Merge file(s) ####</u>
+### Merge file(s) ###
 ```
 # Merge can accept files of the pdf, txt, jpg, png formats
 pdf.py -m input1.txt input2.pdf input3.tex output_name
 ```
 Will give you output.pdf
 
-<u>#### Splitting files ####</u>
+### Splitting files ###
 ```
 # Split will only take files of the pdf format
 pdf.py -s merged_pdf.pdf
