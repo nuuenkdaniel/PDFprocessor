@@ -1,3 +1,5 @@
+#!/bin/sh
+
 python -m venv pdf-venv
 pdf-venv/bin/pip install -r requirements.txt
 chmod +x pdf.py
