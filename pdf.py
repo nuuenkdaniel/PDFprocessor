@@ -26,9 +26,10 @@ def convert2PDF(file, out_path):
             pdf.output(out_path)
     elif file_ext == ".tex":
         try: 
-            result = subprocess.run(["pdflatex", file], capture_output=True, text=True, check=True)
+            process = subprocess.Popen(["pdflatex", file], stdin=subprocess.PIPE)
+            result = process.communicate(input=b"\n")#, capture_output=True, text=True, check=True)
             # Clean up
-            for ext in [".aux", ".log"]:
+            for ext in [".aux", ".log", ".out"]:
                 full_path_clean = file_name+ext
                 if os.path.exists(full_path_clean):
                     os.remove(full_path_clean)

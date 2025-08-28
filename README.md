@@ -1,4 +1,6 @@
 # PDFprocessor
+A command-line tool to convert, merge, and split files with ease.
+Supports PDF, text, latex, and image formats.
 ## Installation ##
 ```
 git clone https://github.com/nuuenkdaniel/PDFprocessor
@@ -7,6 +9,9 @@ cd PDFprocessor
 ```
 
 ## Usage ##
+```
+pdf.py (-c FILE | -m FILE [FILE ...] OUTPUT | -s FILE)
+```
 ### Convert a file ###
 ```
 # Convert can accept files of the pdf, txt, jpg, png formats
@@ -19,7 +24,7 @@ Will give you input.pdf
 # Merge can accept files of the pdf, txt, jpg, png formats
 pdf.py -m input1.txt input2.pdf input3.tex output_name
 ```
-Will give you output.pdf
+Will give you output_name.pdf
 
 ### Splitting files ###
 ```
