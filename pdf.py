@@ -17,12 +17,18 @@ def convert2PDF(file, out_path):
             image_rgb = image.convert('RGB')
             image_rgb.save(out_path, "PDF")        
     elif file_ext == ".txt":
-        with open(file,"r") as txt_file:
+        reg = "/usr/share/fonts/TTF/DejaVuSans.ttf"
+        bold = "/usr/share/fonts/TTF/DejaVuSans-Bold.ttf"
+        italic = "/usr/share/fonts/TTF/DejaVuSans-Oblique.ttf"
+        with open(file,"r", encoding="utf-8") as txt_file:
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Arial",size=16)
+            pdf.add_font("DejaVu", "",  reg, uni=True)
+            pdf.add_font("DejaVu", "B", bold, uni=True)
+            pdf.add_font("DejaVu", "I", italic, uni=True)
+            pdf.set_font("DejaVu",size=12)
             for line in txt_file:
-                pdf.cell(200,10,txt=line,ln=1,align="L")
+                pdf.multi_cell(0, 6, line.rstrip("\n"))
             pdf.output(out_path)
     elif file_ext == ".tex":
         try: 
